@@ -14,7 +14,11 @@ client.on('message', message => {
         if(message.content.split(" ")[1] == 'actu'){
         async function callGetHTML(){
                 let html = await common.getHTML();
-                return message.reply(html.replace(/<[^>]*>?/gm, ''));
+                let msg = '';
+                html.forEach(element => {
+                        msg += element + '\n';
+                });
+                return message.reply(msg.replace(/<[^>]*>?/gm, ''));
         }
         callGetHTML();
         };

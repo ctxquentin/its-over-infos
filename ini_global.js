@@ -20,8 +20,14 @@ module.exports = {
           const response = await axios.get('https://www.dofus.com/fr/mmorpg/communaute/annuaires/pages-guildes/1868100222-over');
           const ito = parser.parse(response.data);
           const actus = ito.querySelectorAll('.ak-title');
-          const html = await actus[0].toString();
-          return html;
+          console.log(actus);
+          const actionsArray = [];
+          actus.forEach(element => {
+              actionsArray.push(element.toString())
+          });
+          console.log(actionsArray);
+          const htmls = await actionsArray;
+          return htmls;
       } catch (e) {
           console.log(e);
           return  '';
