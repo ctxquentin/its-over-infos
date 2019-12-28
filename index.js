@@ -10,11 +10,13 @@ client.once('ready', () => {
 });
 
 client.on('message', message => {
-    console.log(message.content.startsWith("!list"));
 	if (message.content.startsWith("!list")) {
         if(message.content.split(" ")[1] == 'actu'){
-                var html = common.getHTML();
-    
+        async function callGetHTML(){
+                let html = await common.getHTML();
+                return message.reply(html.replace(/<[^>]*>?/gm, ''));
+        }
+        callGetHTML();
         };
 		
 	}
