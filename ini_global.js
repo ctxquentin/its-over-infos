@@ -25,7 +25,6 @@ module.exports = {
           actus.forEach(element => {
               actionsArray.push(element.toString())
           });
-          console.log(actionsArray);
           const htmls = await actionsArray;
           return htmls;
       } catch (e) {
