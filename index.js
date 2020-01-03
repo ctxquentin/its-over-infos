@@ -16,8 +16,12 @@ client.on('message', message => {
                         async function callGetHTML(){
                                 let html = await common.getHTML();
                                 let msg = '';
-                                html.forEach(element => {
+                                let i = 0;
+                                html.some(element => {
+                                        i++;
                                         msg += element + '\n';
+                                        if(message.content.split(" ")[2]) return !isNaN(message.content.split(" ")[2]) && message.content.split(" ")[2] == i;
+                                        
                                 });
                                 return message.reply(msg.replace(/<[^>]*>?/gm, ''));
                         }
