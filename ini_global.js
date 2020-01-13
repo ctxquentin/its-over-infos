@@ -15,12 +15,11 @@ module.exports = {
     }),
 */
 
-    getHTML: async () => {
+    getHtmlActu: async (url) => {
       try {
-          const response = await axios.get('https://www.dofus.com/fr/mmorpg/communaute/annuaires/pages-guildes/1868100222-over');
+          const response = await axios.get(url);
           const ito = parser.parse(response.data);
           const actus = ito.querySelectorAll('.ak-actions-list .ak-title');
-          console.log(actus);
           const actionsArray = [];
           actus.forEach(element => {
               actionsArray.push(element.toString())
@@ -32,14 +31,21 @@ module.exports = {
           return  '';
       }
     },
-    stripHTMl : function(){
+    getActuPageAmount: async () => {
+        try {
+            const response = await axios.get('https://www.dofus.com/fr/mmorpg/communaute/annuaires/pages-guildes/1868100222-over');
+            const ito = parser.parse(response.data);
+            let actus = await ito.querySelectorAll('.ak-pagination li')[7].toString();
+            return actus.replace(/<[^>]*>?/gm, '');
+            
+        } catch (e){
+            console.log(e);
+            return '';
+        }
+    },
+    strip : s => {
         
-        // Create a new div element
-        var temporalDivElement = document.createElement("div");
-        // Set the HTML content with the providen
-        temporalDivElement.innerHTML = html;
-        // Retrieve the text property of the element (cross-browser support)
-        return temporalDivElement.textContent || temporalDivElement.innerText || "";
+        return s.replace(/<[^>]*>?/gm, '');
         
     }
 };
