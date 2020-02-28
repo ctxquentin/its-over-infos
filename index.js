@@ -12,7 +12,7 @@ client.once('ready', () => {
                         client.channels.get('666775624504967168').send(data)
                 });
         }
-        return console.log('cron executed');
+        process.exit();
 });
 
 client.on('message', message => {
