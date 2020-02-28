@@ -5,8 +5,6 @@ const configz = require('./configz/constants');
 const urlGuild = configz.urlGuild;
 
 
-module.exports.getGuildData;
-
 let getGuildData = async function(){
     try{
         const response = axios.get(urlGuild);
@@ -15,6 +13,16 @@ let getGuildData = async function(){
         return final_data;
     }catch(error){
         console.error(error);
+    }
+}
+
+let getCatFact = async function(){
+    try{
+        const response = axios.get('https://some-random-api.ml/facts/cat');
+        let data = await response;
+        return data;
+    }catch(error){
+        console.log(error);
     }
 }
 
@@ -35,3 +43,5 @@ let strip = function(s){
 }
 
 exports.getGuildData = getGuildData;
+
+exports.getCatFact = getCatFact;

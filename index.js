@@ -28,4 +28,13 @@ client.on('message', message => {
         }
 });
 
+client.on('message', message => {
+        if (message.content.startsWith("!catfact")){
+                common.getCatFact()
+                .then(data => {
+                        message.channel.send(data.data.fact);
+                });
+        }
+})
+
 client.login(configz.token);
