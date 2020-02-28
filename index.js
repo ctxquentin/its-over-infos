@@ -9,10 +9,13 @@ client.once('ready', () => {
                 console.log('cron executed');
                 common.getGuildData()
                 .then(data => {
-                        client.channels.get('666775624504967168').send(data)
+                        client.channels.get('666775624504967168').send(data);
+                        setTimeout(function(){
+                                process.exit();
+                        }, 5000);
                 });
         }
-        process.exit();
+        
 });
 
 client.on('message', message => {
