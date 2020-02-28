@@ -1,51 +1,37 @@
-const cheerio = require("cheerio");
 const parser = require("node-html-parser");
 const axios = require('axios');
+const configz = require('./configz/constants');
+
+const urlGuild = configz.urlGuild;
 
 
-module.exports = { 
-/*
-    getHTML : async () =>  request('https://www.dofus.com/fr/mmorpg/communaute/annuaires/pages-guildes/1868100222-over',  function (error, response, html) {
-        if (!error && response.statusCode == 200) {
-            const ito = parser.parse(html);
-            var actus = ito.querySelectorAll('.ak-title');
-            const html = await actus[0].toString();
-            return html;
-        }
-    }),
-*/
+module.exports.getGuildData;
 
-    getHtmlActu: async (url) => {
-      try {
-          const response = await axios.get(url);
-          const ito = parser.parse(response.data);
-          const actus = ito.querySelectorAll('.ak-actions-list .ak-title');
-          const actionsArray = [];
-          actus.forEach(element => {
-              actionsArray.push(element.toString())
-          });
-          const htmls = await actionsArray;
-          return htmls;
-      } catch (e) {
-          console.log(e);
-          return  '';
-      }
-    },
-    getActuPageAmount: async () => {
-        try {
-            const response = await axios.get('https://www.dofus.com/fr/mmorpg/communaute/annuaires/pages-guildes/1868100222-over');
-            const ito = parser.parse(response.data);
-            let actus = await ito.querySelectorAll('.ak-pagination li')[7].toString();
-            return actus.replace(/<[^>]*>?/gm, '');
-            
-        } catch (e){
-            console.log(e);
-            return '';
-        }
-    },
-    strip : s => {
-        
-        return s.replace(/<[^>]*>?/gm, '');
-        
+let getGuildData = async function(){
+    try{
+        const response = axios.get(urlGuild);
+        let data = await response;
+        let final_data = parseActu(data);
+        return final_data;
+    }catch(error){
+        console.error(error);
     }
-};
+}
+
+let parseActu = function(html){
+    const root = parser.parse(html.data);
+    const actus =  root.querySelectorAll('.ak-actions-list .ak-title');
+    let string = '';
+    actus.forEach(element => {
+        string += strip(element.toString()).trim() + '\n';
+    });
+    return string;
+}
+
+let strip = function(s){
+        
+    return s.replace(/<[^>]*>?/gm, '');
+    
+}
+
+exports.getGuildData = getGuildData;
