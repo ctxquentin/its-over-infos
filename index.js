@@ -14,8 +14,7 @@ client.once('ready', () => {
                                 process.exit();
                         }, 5000);
                 });
-        }
-        
+        }                     
 });
 
 client.on('message', message => {
@@ -27,6 +26,17 @@ client.on('message', message => {
                 });
         }
 });
+
+client.on('message', message => {
+        if(message.content.startsWith("!classes") && message.channel.id == 666775624504967168) {
+                common.getGuildClassPages().then(data => {
+                        common.getGuildClass(data).then(d => {
+                                client.channels.get('666775624504967168').send(d);
+                        })
+
+                });
+        }
+})
 
 client.on('message', message => {
         if (message.content.startsWith("!catfact")){
