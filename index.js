@@ -48,7 +48,7 @@ client.on('message', message => {
 });
 
 client.on('message', message => {
-        if(message.content.startsWith("!marcel") && message.content.split(' ')[1] == 'classes' && configs.configs[message.guild.id]['gestion_channel']) {
+        if(message.content.startsWith("!marcel") && message.content.split(' ')[1] == 'classes' && message.channel.id == configs.configs[message.guild.id]['gestion_channel']) {
                 common.getGuildClassPages(configs.configs[message.guild.id]['url_membres']).then(data => {
                         common.getGuildClass(data, configs.configs[message.guild.id]['url_membres']).then(d => {
                                 client.channels.get(configs.configs[message.guild.id]['gestion_channel']).send(d);
