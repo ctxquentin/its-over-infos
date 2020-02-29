@@ -26,6 +26,16 @@ let getCatFact = async function(){
     }
 }
 
+let getPikaPic = async function(){
+    try{
+        const response = axios.get('https://some-random-api.ml/pikachuimg');
+        let data = await response;
+        return data;
+    }catch(error){
+        console.log(error);
+    }
+}
+
 let parseActu = function(html){
     const root = parser.parse(html.data);
     const actus =  root.querySelectorAll('.ak-actions-list .ak-title');
@@ -45,3 +55,5 @@ let strip = function(s){
 exports.getGuildData = getGuildData;
 
 exports.getCatFact = getCatFact;
+
+exports.getPikaPic = getPikaPic;

@@ -37,4 +37,13 @@ client.on('message', message => {
         }
 })
 
+client.on('message', message => {
+        if (message.content.startsWith("!pika")){
+                common.getPikaPic()
+                .then(data => {
+                        message.channel.send(data.data.link);
+                });
+        }
+})
+
 client.login(configz.token);
