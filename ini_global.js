@@ -31,7 +31,7 @@ let getGuildClassPages = async function(url){
     }
 }
 
-let getGuildClass = async function(pages){
+let getGuildClass = async function(pages,url){
     try{
         const classesAmount = { 
             "Ecaflip": 0, "Eniripsa": 0, "Iop": 0,"Cra": 0, "Feca": 0, "Sacrieur": 0,
@@ -44,7 +44,7 @@ let getGuildClass = async function(pages){
         while(n < pages){
             n++;
 
-            const res = axios.get(urlMembers+'?page='+n);
+            const res = axios.get(url+'?page='+n);
             const data = await res;
             let final_data = parseClass(data);
             arrayOfAllClasses = arrayOfAllClasses.concat(final_data);
