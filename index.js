@@ -18,7 +18,7 @@ client.once('ready', () => {
 });
 
 client.on('message', message => {
-	if (message.content.startsWith("!infos") && message.channel.id == 666775624504967168) {
+	if (message.content.startsWith("!marcel") && message.content.split(' ')[1] == 'actu' && message.channel.id == 666775624504967168) {
                 let string = '';
                 common.getGuildData()
                 .then(data => {
@@ -28,7 +28,7 @@ client.on('message', message => {
 });
 
 client.on('message', message => {
-        if(message.content.startsWith("!classes") && message.channel.id == 666775624504967168) {
+        if(message.content.startsWith("!marcel") && message.content.split(' ')[1] == 'classes' && message.channel.id == 666775624504967168) {
                 common.getGuildClassPages().then(data => {
                         common.getGuildClass(data).then(d => {
                                 client.channels.get('666775624504967168').send(d);
@@ -53,6 +53,17 @@ client.on('message', message => {
                 .then(data => {
                         message.channel.send(data.data.link);
                 });
+        }
+})
+
+client.on('message', message => {
+        if(message.content.startsWith('!marcel') && message.content.split(' ')[1] == 'help'){
+                let string = '';
+                string += '**!marcel actu :** Donnes les 20 dernières actualités de la guilde. ( Réservé a la gestion. Elles sont également postés tout les jours a minuit )' + '\n\n';
+                string += '**!marcel classes :** Donne le nombre total de chaque classe joué par les membres de la guilde. ( Réservé a la gestion. ) ' + '\n\n';
+                string += '**!catfact :** Donne un Aldafact aléatoire.' + '\n\n';
+                string += '**!pika :** Pika Pikachuuuuuu !!' + '\n\n';
+                message.channel.send(string);
         }
 })
 
