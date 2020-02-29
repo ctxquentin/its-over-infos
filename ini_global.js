@@ -1,14 +1,14 @@
 const parser = require("node-html-parser");
 const axios = require('axios');
 const configz = require('./configz/constants');
-
 const urlGuild = configz.urlGuild;
 const urlMembers = configz.urlMembersGuilde;
 
 
-let getGuildData = async function(){
+
+let getGuildData = async function(url){
     try{
-        const response = axios.get(urlGuild);
+        const response = axios.get(url);
         let data = await response;
         let final_data = parseActu(data);
         return final_data;
@@ -18,11 +18,11 @@ let getGuildData = async function(){
 }
 
 
-let getGuildClassPages = async function(){
+let getGuildClassPages = async function(url){
     try{
-        const response = axios.get(urlMembers);
+        const response = axios.get(url);
         let data = await response;
-        let final_data = parseClassPages(data);
+        let final_data = parseClassPages(data, url);
         return final_data;
 
     }catch(err){
