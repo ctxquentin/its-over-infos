@@ -26,7 +26,7 @@ client.on('message', async message => {
         if(message.content.startsWith("!marcel") && message.content.split(' ')[1] == 'config_init'){
                 configs.configs[message.guild.id] = {};
                 configs.configs[message.guild.id]['url_actu'] = message.content.split(' ')[2];
-                configs.configs[message.guild.id]['url_membres'] = message.content.split(' ')[2] + '/membres/';
+                configs.configs[message.guild.id]['url_membres'] = message.content.split(' ')[2] + '/membres';
                 configs.configs[message.guild.id]['gestion_channel'] = message.content.split(' ')[3];
                 const json = JSON.stringify(configs);
                 fs.writeFile('./configz/server_config.json', json , (err) => {
