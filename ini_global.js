@@ -31,7 +31,7 @@ let getGuildClassPages = async function(url){
     }
 }
 
-let getGuildClass = async function(pages,url){
+let getGuildClass = async function(pages,url, classe){
     try{
         const classesAmount = { 
             "Ecaflip": 0, "Eniripsa": 0, "Iop": 0,"Cra": 0, "Feca": 0, "Sacrieur": 0,
@@ -56,6 +56,10 @@ let getGuildClass = async function(pages,url){
         let final_string = '';
         for( const amount in classesAmount){
             final_string += `${amount}: ${classesAmount[amount]} \n`;
+        }
+        if(classe !== undefined){
+            final_string = 'Il y a ' + classesAmount[classe.charAt(0).toUpperCase() + classe.slice(1)] + ' ' + classe + ' dans la guilde.';
+            if(classesAmount[classe.charAt(0).toUpperCase() + classe.slice(1)] == undefined) final_string = 'Nom de classe incorrecte'; 
         }
         return final_string;
 
