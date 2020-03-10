@@ -58,6 +58,12 @@ client.on('message', message => {
 })
 
 client.on('message', message => {
+        if(message.content.startsWith('!check') && message.content.split(' ')[1].length > 0){
+                message.channel.send('https://account.ankama.com/fr/profil-ankama/' + message.content.split(' ')[1]);
+        }
+})
+
+client.on('message', message => {
         if (message.content.startsWith("!catfact")){
                 common.getCatFact()
                 .then(data => {
