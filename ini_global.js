@@ -78,6 +78,16 @@ let getCatFact = async function(){
     }
 }
 
+let getMeme = async function(){
+    try{
+        const response = axios.get('https://some-random-api.ml/meme');
+        let data = await response;
+        return data;
+    }catch(error){
+        console.log(error);
+    }
+}
+
 let getPikaPic = async function(){
     try{
         const response = axios.get('https://some-random-api.ml/pikachuimg');
@@ -129,5 +139,7 @@ exports.getGuildClassPages = getGuildClassPages;
 exports.getGuildClass = getGuildClass;
 
 exports.getCatFact = getCatFact;
+
+exports.getMeme = getMeme;
 
 exports.getPikaPic = getPikaPic;
