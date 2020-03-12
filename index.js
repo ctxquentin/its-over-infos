@@ -73,6 +73,15 @@ client.on('message', message => {
 })
 
 client.on('message', message => {
+        if (message.content.startsWith("!meme")){
+                common.getMeme()
+                .then(data => {
+                        message.channel.send(data.data.image);
+                });
+        }
+})
+
+client.on('message', message => {
         if (message.content.startsWith("!pika")){
                 common.getPikaPic()
                 .then(data => {
@@ -88,6 +97,7 @@ client.on('message', message => {
                 string += '**!marcel classes :** Donne le nombre total de chaque classe joué par les membres de la guilde. ( Réservé a la gestion. ) ' + '\n\n';
                 string += '**!check pseudo_compte :** Donne un lien vers le profil Ankama ' + '\n\n';
                 string += '**!catfact :** Donne un Aldafact aléatoire.' + '\n\n';
+                string += '**!meme :** Donne un meme aléatoire.' + '\n\n';
                 string += '**!pika :** Pika Pikachuuuuuu !!' + '\n\n';
                 message.channel.send(string);
         }
