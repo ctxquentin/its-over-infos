@@ -1,25 +1,13 @@
-const Discord = require('discord.js');
-const client = new Discord.Client();
-const common = require('./ini_global');
-const configz = require('./configz/constants');
+import  {Client, Message, TextChannel } from 'discord.js';
+import common = require('./ini_global');
+import configz = require('./configz/constants.js');
 var fs = require('fs');
 
 let rawdata = fs.readFileSync('./configz/server_config.json');
 let configs = JSON.parse(rawdata);
-
+let client = new Client();
 client.once('ready', () => {
-        console.log('Bot loaded');
-
-        if(process.argv[2] == 'cron'){
-                console.log('cron executed');
-                common.getGuildData()
-                .then(data => {
-                        client.channels.get('666775624504967168').send(data);
-                        setTimeout(function(){
-                                process.exit();
-                        }, 5000);
-                });
-        }                     
+        console.log('Bot loaded');          
 });
 
 client.on('message', async message => {
@@ -42,7 +30,8 @@ client.on('message', message => {
                 let string = '';
                 common.getGuildData(configs.configs[message.guild.id]['url_actu'])
                 .then(data => {
-                        client.channels.get(configs.configs[message.guild.id]['gestion_channel']).send(data)
+                        let channel = client.channels.get(configs.configs[message.guild.id]['gestion_channel']) as TextChannel;
+                        channel.send(data);
                 });
         }
 });
@@ -51,7 +40,8 @@ client.on('message', message => {
         if(message.content.startsWith("!marcel") && message.content.split(' ')[1] == 'classes' && message.channel.id == configs.configs[message.guild.id]['gestion_channel']) {
                 common.getGuildClassPages(configs.configs[message.guild.id]['url_membres']).then(data => {
                         common.getGuildClass(data, configs.configs[message.guild.id]['url_membres'], message.content.split(' ')[2]).then(d => {
-                                client.channels.get(configs.configs[message.guild.id]['gestion_channel']).send(d);
+                                let channel = client.channels.get(configs.configs[message.guild.id]['gestion_channel']) as TextChannel;
+                                channel.send(d);
                         })
                 });
         }
