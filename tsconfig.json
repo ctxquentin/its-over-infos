@@ -4,6 +4,10 @@
     "module": "commonjs",
     "strict": true,
     "outDir": "dist",
-    "sourceMap": true
-  }
+    "sourceMap": true,
+    "resolveJsonModule": true
+  },
+  "include": [
+    "src/*.json"
+  ]
 }
