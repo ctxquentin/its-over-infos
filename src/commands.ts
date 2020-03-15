@@ -44,7 +44,6 @@ export class Commands {
         const embed = {
             "title": contenu,
             "color": 14688292,
-            "timestamp": "2020-03-15T13:27:23.866Z",
             "author": {
               "name": 'Vote crée par : '+this.message.author.username,
             },
@@ -105,16 +104,54 @@ export class Commands {
 
     // Send a message of the commands with a short explanation
     help(){
-        let string = '';
-        string += '**!marcel actu :** Donnes les 20 dernières actualités de la guilde. ( Réservé a la gestion. Elles sont également postés tout les jours a minuit )' + '\n\n';
-        string += '**!marcel classes :** Donne le nombre total de chaque classe joué par les membres de la guilde. ( Réservé a la gestion. ) ' + '\n\n';
-        string += '**!check pseudo_compte :** Donne un lien vers le profil Ankama ' + '\n\n';
-        string += '**!marcel crerVote unTitre :** créer un message de vote avec un titre, donne le grade doit voter à toutes les personnes ayant accès à ce canal, enlève le grade et donne a voté quand un utilisateur vote' + '\n\n';
-        string += '**!marcel finVote :** retire les grades doit voter et a voté'
-        string += '**!catfact :** Donne un Aldafact aléatoire.' + '\n\n';
-        string += '**!meme :** Donne un meme aléatoire.' + '\n\n';
-        string += '**!pika :** Pika Pikachuuuuuu !!' + '\n\n';
-        this.message.channel.send(string);
+        const embed = {
+          "title": "Voici la liste des commandes que vous pouvez utiliser:",
+          "description": "Afin de pouvoir utilisez certaines commandes commencer par utiliser !marcel config_init",
+          "color": 16666191,
+          "footer": {},
+          "fields": [
+            {
+              "name": "```!marcel config_init [lien page de guilde] [identifiant canal]```",
+              "value": "Permet de définir la page de quel sur la quelle le bot doit récupérer les informations, et sur quel canal il doit les afficher."
+            },
+            {
+              "name": "```(Réservé à la gestion) !marcel actu ```",
+              "value": "Donnes les 20 dernières actualités de la guilde. Elles sont également postés tout les jours a minuit"
+            },
+            {
+              "name": "```(Réservé à la gestion) !marcel classes (optional classes)```",
+              "value": "Donne le nombre total de chaque classe joué par les membres de la guilde."
+            },
+            {
+              "name": "```!marcel check [pseudo compte]```",
+              "value": "Donne un lien vers le profil Ankama."
+            },
+            {
+              "name": "```!marcel creerVote [un titre]```",
+              "value": "Créer un message de vote avec un titre, donne le grade doit voter à toutes les personnes ayant accès à ce canal, enlève le grade et donne a voté quand un utilisateur vote."
+            },
+            {
+              "name": "```!marcel finVote```",
+              "value": "Retire les grades doit voter et a voté."
+            },
+            {
+              "name": "```!catfact```",
+              "value": "Donne un Aldafact aléatoire.",
+              "inline": true
+            },
+            {
+              "name": "```!pika```",
+              "value": "Pika Pikachuuuuuu !!",
+              "inline": true
+            },
+            {
+              "name": "```!meme```",
+              "value": "Donne un meme aléatoire.",
+              "inline": true
+            }
+          ]
+        };
+        this.message.channel.send({ embed });
     }
 
     // Send a message returning the last news of the concerning guild
