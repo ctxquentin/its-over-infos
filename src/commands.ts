@@ -1,4 +1,4 @@
-import { Message, ReactionCollector, User, ReactionEmoji, MessageReaction, Client, TextChannel, GuildMember, DiscordAPIError } from "discord.js";
+import { Message, ReactionCollector, User, ReactionEmoji, MessageReaction, Client, TextChannel, GuildMember, DiscordAPIError, Snowflake } from "discord.js";
 import { Data } from './Data';
 import * as configz from './server_config.json';
 import fs = require('fs');
@@ -29,7 +29,7 @@ export class Commands {
                     this.configBot(msg);
                     break;
                 case 'crerVote' : 
-                    this.crerVote();
+                    this.crerVote(msg.content.replace("!marcel crerVote", ""));
                     break;
                 case 'finirVote': 
                     this.finirVote();
@@ -40,22 +40,57 @@ export class Commands {
         }
     }
 
-    // nom provisioire
-    crerVote(){
+    embedVote(contenu : string){
+        const embed = {
+            "title": contenu,
+            "color": 14688292,
+            "timestamp": "2020-03-15T13:27:23.866Z",
+            "author": {
+              "name": 'Vote crée par : '+this.message.author.username,
+            },
+            "fields": [
+              {
+                "name": "✅",
+                "value": "Oui",
+                "inline": true
+              },
+              {
+                "name": "❌",
+                "value": "Non \n\n",
+                "inline": true
+              }
+            ]
+          };
+          this.message.channel.send({ embed }).then(message =>{
+            this.gererVote(message);
+          });
+    }
+
+    crerVote(contenu : string){
         if (this.message.channel.type === 'dm') return;
         const channel : TextChannel = this.message.channel;
+        if (contenu === ""){
+            channel.send("crerVote ne s'utilise pas comme ca, !marcel help pour plus d'information");
+            return;
+        }
+        this.embedVote(contenu);
+    }
+
+    gererVote (message :Message) {
+        if (message.channel.type === 'dm') return;
+        const channel : TextChannel = message.channel;
         channel.members.each(guildMember => {if(!guildMember.user.bot)guildMember.roles.add('688471685162074222');});
-        this.message.react('✅');
-        this.message.react('❌');
+        message.react('✅');
+        message.react('❌');
         const filter = (reaction:MessageReaction, user:User) => (reaction.emoji.name === '✅'|| reaction.emoji.name === '❌') && !user.bot;
-        const collector = this.message.createReactionCollector(filter, {dispose: true});
+        const collector = message.createReactionCollector(filter, {dispose: true});
         collector.on('remove', (r,user) => {
-            this.message.guild?.member(user)?.roles.add('688471685162074222');
-            this.message.guild?.member(user)?.roles.remove('688471714644230188');
+            message.guild?.member(user)?.roles.add('688471685162074222');
+            message.guild?.member(user)?.roles.remove('688471714644230188');
         });
         collector.on('collect', (r,user) => {
-            this.message.guild?.member(user)?.roles.add('688471714644230188');
-            this.message.guild?.member(user)?.roles.remove('688471685162074222');
+            message.guild?.member(user)?.roles.add('688471714644230188');
+            message.guild?.member(user)?.roles.remove('688471685162074222');
         });
 
     }
@@ -65,6 +100,7 @@ export class Commands {
         const channel : TextChannel = this.message.channel;
         channel.members.each(guildMember => guildMember.roles.remove('688471685162074222'));
         channel.members.each(guildMember => guildMember.roles.remove('688471714644230188'));
+        this.message.react('✅');
     }
 
     // Send a message of the commands with a short explanation
@@ -73,6 +109,8 @@ export class Commands {
         string += '**!marcel actu :** Donnes les 20 dernières actualités de la guilde. ( Réservé a la gestion. Elles sont également postés tout les jours a minuit )' + '\n\n';
         string += '**!marcel classes :** Donne le nombre total de chaque classe joué par les membres de la guilde. ( Réservé a la gestion. ) ' + '\n\n';
         string += '**!check pseudo_compte :** Donne un lien vers le profil Ankama ' + '\n\n';
+        string += '**!marcel crerVote unTitre :** créer un message de vote avec un titre, donne le grade doit voter à toutes les personnes ayant accès à ce canal, enlève le grade et donne a voté quand un utilisateur vote' + '\n\n';
+        string += '**!marcel finVote :** retire les grades doit voter et a voté'
         string += '**!catfact :** Donne un Aldafact aléatoire.' + '\n\n';
         string += '**!meme :** Donne un meme aléatoire.' + '\n\n';
         string += '**!pika :** Pika Pikachuuuuuu !!' + '\n\n';
