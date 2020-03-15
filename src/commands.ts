@@ -26,8 +26,13 @@ export class Commands {
                     break;
                 case 'config_init' :
                     this.configBot(msg);
+                    break;
                 case 'check' :
                     if(msg.content.split(' ')[1] == 'check') this.checkAccount(msg);
+                    break;
+                case 'classes' :
+                    this.getClasses(msg);
+                    break;
                 default:
                     break;
             }
@@ -78,6 +83,20 @@ export class Commands {
 
     checkAccount(message : Message){
         if(message.guild !== null && message.content.split(' ')[2].length > 0) message.channel.send('https://account.ankama.com/fr/profil-ankama/' + message.content.split(' ')[2] + '/dofus');
+    }
+    
+    getClasses(message : Message){
+        if(message.guild !== null){
+            let dataParser = new Data();
+            dataParser.getGuildClassPages(this.config.configs[message.guild.id]['url_membres']).then(data  => {
+                if(message.guild !== null && typeof(data) == 'string'){
+                    dataParser.getGuildClass(data, this.config.configs[message.guild.id]['url_membres']).then(d => {
+                        console.log(d);
+                    })
+                }
+                
+            })
+        }
     }
 
 };
