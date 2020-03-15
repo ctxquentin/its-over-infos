@@ -1,4 +1,4 @@
 /dist/
 /node_modules/
 .env
-/src/server_config.json
+src/server_config.json
