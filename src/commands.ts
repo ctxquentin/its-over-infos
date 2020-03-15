@@ -1,4 +1,5 @@
-import { Message } from "discord.js";
+import { Message, ReactionCollector, User, ReactionEmoji, MessageReaction, Client, TextChannel, GuildMember, DiscordAPIError } from "discord.js";
+import { userInfo } from "os";
 
 export class Commands {
     whichCmd: string;
@@ -7,11 +8,39 @@ export class Commands {
         this.whichCmd = cmd;
         this.message = msg;
         this.assigningCommand(msg);
-        
     }
 
     assigningCommand(msg : Message){
         if(msg.content.startsWith('!marcel') && msg.content.split(' ')[1] == 'help') this.help();
+        if(msg.content.startsWith('!marcel') && msg.content.split(' ')[1] == 'crerVote') this.crerVote();
+        if(msg.content.startsWith('!marcel') && msg.content.split(' ')[1] == 'finirVote') this.finirVote();
+    }
+
+    // nom provisioire
+    crerVote(){
+        if (this.message.channel.type === 'dm') return;
+        const channel : TextChannel = this.message.channel;
+        channel.members.each(guildMember => {if(!guildMember.user.bot)guildMember.roles.add('688471685162074222');});
+        this.message.react('✅');
+        this.message.react('❌');
+        const filter = (reaction:MessageReaction, user:User) => (reaction.emoji.name === '✅'|| reaction.emoji.name === '❌') && !user.bot;
+        const collector = this.message.createReactionCollector(filter, {dispose: true});
+        collector.on('remove', (r,user) => {
+            this.message.guild?.member(user)?.roles.add('688471685162074222');
+            this.message.guild?.member(user)?.roles.remove('688471714644230188');
+        });
+        collector.on('collect', (r,user) => {
+            this.message.guild?.member(user)?.roles.add('688471714644230188');
+            this.message.guild?.member(user)?.roles.remove('688471685162074222');
+        });
+
+    }
+
+    finirVote(){
+        if (this.message.channel.type === 'dm') return;
+        const channel : TextChannel = this.message.channel;
+        channel.members.each(guildMember => guildMember.roles.remove('688471685162074222'));
+        channel.members.each(guildMember => guildMember.roles.remove('688471714644230188'));
     }
 
     help(){
