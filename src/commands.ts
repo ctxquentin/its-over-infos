@@ -1,19 +1,39 @@
 import { Message } from "discord.js";
+import { Data } from './Data';
+import * as configz from './server_config.json';
+import fs = require('fs');
 
 export class Commands {
     whichCmd: string;
     message: Message;
+    config: any;
     constructor(cmd : string, msg : Message){
+        this.config = configz;
         this.whichCmd = cmd;
         this.message = msg;
-        this.assigningCommand(msg);
-        
+        this.assigningCommand(msg);        
     }
 
+    // Depending on the content of the command, execute the appropriate function
     assigningCommand(msg : Message){
-        if(msg.content.startsWith('!marcel') && msg.content.split(' ')[1] == 'help') this.help();
+        if(msg.content.startsWith('!marcel')){
+            switch(msg.content.split(' ')[1]){
+                case 'help' :
+                    this.help();
+                    break;
+                case 'actu' :
+                    this.getActu(msg);
+                    break;
+                case 'config_init' :
+                    this.configBot(msg);
+                default:
+                    break;
+            }
+        }
+
     }
 
+    // Send a message of the commands with a short explanation
     help(){
         let string = '';
         string += '**!marcel actu :** Donnes les 20 dernières actualités de la guilde. ( Réservé a la gestion. Elles sont également postés tout les jours a minuit )' + '\n\n';
@@ -23,6 +43,34 @@ export class Commands {
         string += '**!meme :** Donne un meme aléatoire.' + '\n\n';
         string += '**!pika :** Pika Pikachuuuuuu !!' + '\n\n';
         this.message.channel.send(string);
+    }
+
+    // Send a message returning the last news of the concerning guild
+    getActu(message : Message){
+        let data = new Data();
+        if(this.message.guild !== null){
+            data.getGuildData(this.config.configs[this.message.guild.id]['url_actu'])
+            .then(d => {
+                message.channel.send(d);
+            })
+            
+        }
+    }
+
+    // Setting up the bot, including guild page url & the id of the management channel
+    configBot(message : Message){
+        if(message.guild !==null){
+            this.config.configs[message.guild.id] = {};
+            this.config.configs[message.guild.id]['url_actu'] = message.content.split(' ')[2];
+            this.config.configs[message.guild.id]['url_membres'] = message.content.split(' ')[2] + '/membres';
+            this.config.configs[message.guild.id]['gestion_channel'] = message.content.split(' ')[3];
+            fs.writeFile('./dist/server_config.json', JSON.stringify(this.config) , err => {
+                    if(err){
+                            console.log('erreur fdp')
+                    }
+            });
+        }
+
     }
 
 };
