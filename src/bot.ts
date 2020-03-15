@@ -1,7 +1,6 @@
 
 import { Message, Client } from 'discord.js'; 
-import { Commands } from './commands';
-import fs = require('fs');
+import { Commands } from './Commands';
 
 
 
@@ -18,6 +17,7 @@ export class Bot {
                 new Commands(message.content.split(' ')[1], message);
             }
         })
+
     }
 
 }
