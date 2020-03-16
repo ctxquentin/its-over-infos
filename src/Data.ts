@@ -14,6 +14,36 @@ export class Data {
         }
     }
 
+    async getCatFact (){
+        try{
+            const response = axios.get('https://some-random-api.ml/facts/cat');
+            let data = await response;
+            return data.data;
+        }catch(error){
+            console.log(error);
+        }
+    }
+
+    async getMeme (){
+        try{
+            const response = axios.get('https://some-random-api.ml/meme');
+            let data = await response;
+            return data.data;
+        }catch(error){
+            console.log(error);
+        }
+    }
+
+    async getPika (){
+        try{
+            const response = axios.get('https://some-random-api.ml/pikachuimg');
+            let data = await response;
+            return data.data;
+        }catch(error){
+            console.log(error);
+        }
+    }
+
     parseActu(html : string){
         const root : HTMLElement | TextNode  = parse(html);
         if(root instanceof HTMLElement){

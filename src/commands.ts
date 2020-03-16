@@ -28,12 +28,23 @@ export class Commands {
                 case 'config_init' :
                     this.configBot(msg);
                     break;
-                case 'crerVote' : 
-                    this.crerVote(msg.content.replace("!marcel crerVote", ""));
+                case 'creerVote' : 
+                    this.creerVote(msg.content.replace("!marcel creerVote", ""));
                     break;
                 case 'finirVote': 
                     this.finirVote();
                     break;
+                case 'check' :
+                    if(msg.content.split(' ')[1] == 'check') this.checkAccount(msg);
+                    break;
+                case 'catfact' :
+                    this.getCatFact();
+                    break;
+                case 'meme' :
+                    this.getMeme();
+                    break;
+                case 'pika' :
+                    this.getPika();
                 default:
                     break;
             }
@@ -65,11 +76,11 @@ export class Commands {
           });
     }
 
-    crerVote(contenu : string){
+    creerVote(contenu : string){
         if (this.message.channel.type === 'dm') return;
         const channel : TextChannel = this.message.channel;
         if (contenu === ""){
-            channel.send("crerVote ne s'utilise pas comme ca, !marcel help pour plus d'information");
+            channel.send("creerVote ne s'utilise pas comme ca, !marcel help pour plus d'information");
             return;
         }
         this.embedVote(contenu);
@@ -166,6 +177,40 @@ export class Commands {
         }
     }
 
+    // Send a message returning a random cat fact
+    getCatFact(){
+        let data = new Data();
+        if(this.message.guild !== null){
+            data.getCatFact()
+            .then(d => {
+                this.message.channel.send(d.fact);
+            })
+        }
+    }
+
+    // Send a message returning a random meme
+    getMeme(){
+        let data = new Data();
+        if(this.message.guild !== null){
+            data.getMeme()
+            .then(d => {
+                this.message.channel.send(d.image);
+            })
+        }
+    }
+
+            // Send a message returning a random pikachu img
+    getPika(){
+        let data = new Data();
+        if(this.message.guild !== null){
+            data.getPika()
+            .then(d => {
+                this.message.channel.send(d.link);
+            })
+        }
+    }
+
+
     // Setting up the bot, including guild page url & the id of the management channel
     configBot(message : Message){
         if(message.guild !==null){
@@ -180,6 +225,10 @@ export class Commands {
             });
         }
 
+    }
+
+    checkAccount(message : Message){
+        if(message.guild !== null && message.content.split(' ')[2].length > 0) message.channel.send('https://account.ankama.com/fr/profil-ankama/' + message.content.split(' ')[2] + '/dofus');
     }
 
 };
