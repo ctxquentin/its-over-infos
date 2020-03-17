@@ -1,3 +1,4 @@
+/dist/
 /node_modules/
-/configz/constants.js
-/configz/server_config.json
+.env
+src/server_config.json
