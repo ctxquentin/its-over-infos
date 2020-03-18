@@ -90,8 +90,8 @@ export class Commands {
             let dataParser = new Data();
             dataParser.getGuildClassPages(this.config.configs[message.guild.id]['url_membres']).then(data  => {
                 if(message.guild !== null && typeof(data) == 'string'){
-                    dataParser.getGuildClass(data, this.config.configs[message.guild.id]['url_membres']).then(d => {
-                        console.log(d);
+                    dataParser.getGuildClass(data, this.config.configs[message.guild.id]['url_membres'],message.content.split(' ')[2]).then(d => {
+                        message.channel.send(d);
                     })
                 }
                 
