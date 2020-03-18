@@ -88,28 +88,38 @@ export class Commands {
 
     gererVote (message :Message) {
         if (message.channel.type === 'dm') return;
+        if(message.guild === null) return;
+        const doit_voter : string = this.config.configs[message.guild.id]['doit_voter'];
+        const a_voter : string = this.config.configs[message.guild.id]['a_voter'];
         const channel : TextChannel = message.channel;
-        channel.members.each(guildMember => {if(!guildMember.user.bot)guildMember.roles.add('688471685162074222');});
+        // add role doit voter to everyone that have access to the channel
+        channel.members.each(guildMember => {if(!guildMember.user.bot)guildMember.roles.add(doit_voter);});
         message.react('✅');
         message.react('❌');
+        // Check that the reaction are ✅ or ❌ and the user is not a bot
         const filter = (reaction:MessageReaction, user:User) => (reaction.emoji.name === '✅'|| reaction.emoji.name === '❌') && !user.bot;
         const collector = message.createReactionCollector(filter, {dispose: true});
+        // WHEN a user a reaction give him "doit_voter" and remove "a_voter"
         collector.on('remove', (r,user) => {
-            message.guild?.member(user)?.roles.add('688471685162074222');
-            message.guild?.member(user)?.roles.remove('688471714644230188');
+            message.guild?.member(user)?.roles.add(doit_voter);
+            message.guild?.member(user)?.roles.remove(a_voter);
         });
+        // WHEN a user ADD a reaction give him "a_voter" and remove "doit_voter"
         collector.on('collect', (r,user) => {
-            message.guild?.member(user)?.roles.add('688471714644230188');
-            message.guild?.member(user)?.roles.remove('688471685162074222');
+            message.guild?.member(user)?.roles.add(a_voter);
+            message.guild?.member(user)?.roles.remove(doit_voter);
         });
 
     }
 
     finirVote(){
         if (this.message.channel.type === 'dm') return;
+        if(this.message.guild === null) return;
         const channel : TextChannel = this.message.channel;
-        channel.members.each(guildMember => guildMember.roles.remove('688471685162074222'));
-        channel.members.each(guildMember => guildMember.roles.remove('688471714644230188'));
+        const doit_voter : string = this.config.configs[this.message.guild.id]['doit_voter'];
+        const a_voter : string = this.config.configs[this.message.guild.id]['a_voter'];
+        channel.members.each(guildMember => guildMember.roles.remove(doit_voter));
+        channel.members.each(guildMember => guildMember.roles.remove(a_voter));
         this.message.react('✅');
     }
 
@@ -117,17 +127,17 @@ export class Commands {
     help(){
         const embed = {
           "title": "Voici la liste des commandes que vous pouvez utiliser:",
-          "description": "Afin de pouvoir utilisez certaines commandes commencer par utiliser !marcel config_init",
+          "description": "Afin de pouvoir utiliser certaines commandes, commencez par utiliser !marcel config_init.",
           "color": 16666191,
           "footer": {},
           "fields": [
             {
-              "name": "```!marcel config_init [lien page de guilde] [identifiant canal]```",
-              "value": "Permet de définir la page de quel sur la quelle le bot doit récupérer les informations, et sur quel canal il doit les afficher."
+              "name": "```!marcel config_init [lien page de guilde] [identifiant canal] [identifiant role doit voter] [identifiant role a voter]```",
+              "value": "Permet de définir la page sur laquelle le bot doit récupérer les informations, et sur quel canal il doit les afficher, ainsi que les identifiants des roles pour les votes."
             },
             {
               "name": "```(Réservé à la gestion) !marcel actu ```",
-              "value": "Donnes les 20 dernières actualités de la guilde. Elles sont également postés tout les jours a minuit"
+              "value": "Donne les 20 dernières actualités de la guilde. Elles sont également postés tout les jours a minuit."
             },
             {
               "name": "```(Réservé à la gestion) !marcel classes (optional classes)```",
@@ -139,7 +149,7 @@ export class Commands {
             },
             {
               "name": "```!marcel creerVote [un titre]```",
-              "value": "Créer un message de vote avec un titre, donne le grade doit voter à toutes les personnes ayant accès à ce canal, enlève le grade et donne a voté quand un utilisateur vote."
+              "value": "Créer un message de vote avec un titre, donne le grade doit voter à toutes les personnes ayant accès à ce canal, enlève le grade et donne le grade a voté quand un utilisateur vote."
             },
             {
               "name": "```!marcel finVote```",
@@ -218,9 +228,14 @@ export class Commands {
             this.config.configs[message.guild.id]['url_actu'] = message.content.split(' ')[2];
             this.config.configs[message.guild.id]['url_membres'] = message.content.split(' ')[2] + '/membres';
             this.config.configs[message.guild.id]['gestion_channel'] = message.content.split(' ')[3];
+            this.config.configs[message.guild.id]['doit_voter'] = message.content.split(' ')[4];
+            this.config.configs[message.guild.id]['a_voter'] = message.content.split(' ')[5];
             fs.writeFile('./dist/server_config.json', JSON.stringify(this.config) , err => {
                     if(err){
-                            console.log('erreur fdp')
+                        console.log('erreur fdp');
+                        message.react('❌');
+                    } else {
+                        message.react('✅');
                     }
             });
         }
