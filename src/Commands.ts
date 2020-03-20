@@ -17,41 +17,41 @@ export class Commands {
 
     // Depending on the content of the command, execute the appropriate function
     assigningCommand(msg : Message){
-        if(msg.content.startsWith('!marcel')){
-            switch(msg.content.split(' ')[1]){
-                case 'help' :
-                    this.help();
-                    break;
-                case 'actu' :
-                    this.getActu(msg);
-                    break;
-                case 'config_init' :
-                    this.configBot(msg);
-                    break;
-                case 'classes' :
-                    this.getClasses(msg);
-                    break;
-                case 'creerVote' : 
-                    this.creerVote(msg.content.replace("!marcel creerVote", ""));
-                    break;
-                case 'finirVote': 
-                    this.finirVote();
-                    break;
-                case 'check' :
-                    if(msg.content.split(' ')[1] == 'check') this.checkAccount(msg);
-                    break;
-                case 'catfact' :
-                    this.getCatFact();
-                    break;
-                case 'meme' :
-                    this.getMeme();
-                    break;
-                case 'pika' :
-                    this.getPika();
-                default:
-                    break;
-            }
+        
+        switch(msg.content.split(' ')[1]){
+            case 'help' :
+                this.help();
+                break;
+            case 'actu' :
+                this.getActu(msg);
+                break;
+            case 'config_init' :
+                this.configBot(msg);
+                break;
+            case 'classes' :
+                this.getClasses(msg);
+                break;
+            case 'creerVote' : 
+                this.creerVote(msg.content.replace("!marcel creerVote", ""));
+                break;
+            case 'finirVote': 
+                this.finirVote();
+                break;
+            case 'check' :
+                if(msg.content.split(' ')[1] == 'check') this.checkAccount(msg);
+                break;
+            case 'catfact' :
+                this.getCatFact();
+                break;
+            case 'meme' :
+                this.getMeme();
+                break;
+            case 'pika' :
+                this.getPika();
+            default:
+                break;
         }
+        
     }
 
     embedVote(contenu : string){
@@ -114,7 +114,6 @@ export class Commands {
         });
 
     }
-    
 
     finirVote(){
         if (this.message.channel.type === 'dm') return;
@@ -160,17 +159,17 @@ export class Commands {
               "value": "Retire les grades doit voter et a voté."
             },
             {
-              "name": "```!catfact```",
+              "name": "```!marcel catfact```",
               "value": "Donne un Aldafact aléatoire.",
               "inline": true
             },
             {
-              "name": "```!pika```",
+              "name": "```!marcel pika```",
               "value": "Pika Pikachuuuuuu !!",
               "inline": true
             },
             {
-              "name": "```!meme```",
+              "name": "```!marcel meme```",
               "value": "Donne un meme aléatoire.",
               "inline": true
             }
@@ -182,7 +181,7 @@ export class Commands {
     // Send a message returning the last news of the concerning guild
     getActu(message : Message){
         let data = new Data();
-        if(this.message.guild !== null){
+        if(this.message.guild !== null && message.guild !== null && message.channel.id == this.config.configs[message.guild.id]['gestion_channel']){
             data.getGuildData(this.config.configs[this.message.guild.id]['url_actu'])
             .then(d => {
                 message.channel.send(d);
@@ -252,7 +251,7 @@ export class Commands {
 
     
     getClasses(message : Message){
-        if(message.guild !== null){
+        if(message.guild !== null && message.channel.id == this.config.configs[message.guild.id]['gestion_channel']){
             let dataParser = new Data();
             dataParser.getGuildClassPages(this.config.configs[message.guild.id]['url_membres']).then(data  => {
                 if(message.guild !== null && typeof(data) == 'string'){

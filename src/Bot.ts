@@ -13,13 +13,12 @@ export class Bot {
 
     listen() {
         this.client.on('message', async ( message : Message) => {
-            if(message.content.startsWith('!marcel')){
+            if(message.content.startsWith('!marcel') || message.content.startsWith('!dak')){
                 new Commands(message.content.split(' ')[1], message);
             }
         })
 
     }
-    
 
 }
 
