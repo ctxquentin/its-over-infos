@@ -114,6 +114,7 @@ export class Commands {
         });
 
     }
+    
 
     finirVote(){
         if (this.message.channel.type === 'dm') return;
